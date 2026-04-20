@@ -32,142 +32,54 @@
         }
 
         .nav-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: 20px 40px;
-            transition: 0.3s all ease;
-            position: relative;
-        }
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.1rem;
+        cursor: pointer;
+        padding: 20px 40px;
+        transition: 0.3s all ease;
+        position: relative;
+        border-bottom: 3px solid transparent; /* Alapértelmezett láthatatlan vonal */
+    }
 
-        /* Aktív menüpont hatás: átlátszó kék háttér és aláhúzás */
-        .nav-btn.active {
-            background-color: rgba(0, 62, 138, 0.2); /* Átlátszó kék */
-            border-bottom: 3px solid var(--deep-blue);
-            color: #4da3ff;
-        }
+    /* Kifinomult, felfelé halványuló kék hatás */
+    .nav-btn.active {
+        background-image: linear-gradient(to top, rgba(0, 62, 138, 0.4), rgba(0, 62, 138, 0));
+        border-bottom: 3px solid var(--deep-blue);
+        color: #4da3ff;
+    }
 
-        /* --- OLDALAK --- */
-        .page {
-            display: none;
-            padding-top: 100px;
-            min-height: 100vh;
-            animation: fadeIn 0.6s ease;
-        }
+    /* Zászló és Monogram elrendezése a kártyán */
+    .card-header {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px; /* Távolság az elemek között */
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
 
-        .page.active { display: block; }
+    .monogram {
+        font-weight: bold;
+        color: var(--deep-blue);
+        background: rgba(255,255,255,0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; filter: blur(5px); }
-            to { opacity: 1; filter: blur(0); }
-        }
-
-        /* --- KEZDŐLAP KÉPEKKEL --- */
-        .home-container {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0 5%;
-        }
-
-        .side-images {
-            width: 200px;
-            height: 300px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 62, 138, 0.3);
-            position: relative;
-        }
-
-        .side-images img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .main-content { text-align: center; max-width: 500px; }
-
-        #nation {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #4da3ff;
-            text-shadow: 0 0 15px rgba(0, 62, 138, 0.5);
-            margin: 20px 0;
-        }
-
-        /* --- LISTA ÉS HARMONIKA --- */
-        .list-wrapper { max-width: 900px; margin: auto; padding: 20px; }
-
-        .continent-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .tab-btn.active {
-            background: var(--deep-blue);
-            border-color: var(--deep-blue);
-        }
-
-        .nation-card {
-            background: rgba(255,255,255,0.03);
-            margin-bottom: 15px;
-            border-radius: 10px;
-            border-left: 4px solid transparent;
-            transition: 0.3s;
-        }
-
-        .nation-card:hover { border-left-color: var(--deep-blue); background: rgba(255,255,255,0.06); }
-
-        .card-header {
-            width: 100%;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .flag { font-size: 1.5rem; margin-right: 15px; }
-
-        .card-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 0 20px;
-        }
-
-        .card-body.open { max-height: 1000px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            text-align: left;
-            font-size: 0.95rem;
-        }
-
-        .info-section h4 { color: #4da3ff; margin-bottom: 5px; }
-    </style>
+    .flag-img {
+        width: 30px;
+        height: auto;
+        border-radius: 3px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+</style>
 </head>
 <body>
 
@@ -210,105 +122,38 @@
     </div>
 
 <script>
-    // --- ADATBÁZIS OBJEKTUMOKKAL ---
+    // Az adatbázis kiegészítve monogrammal és zászló elérési úttal
     const nationData = [
         {
             name: "Magyar",
             continent: "Európa",
-            flag: "🇭🇺",
+            monogram: "HU",
+            flagPath: "flags/hu.png", // A mappa és a fájlnév
             traits: "Karakán, vendégszerető, büszke.",
             origin: "Uráli eredet, Kárpát-medencei letelepedés.",
             features: "Változatos, gyakran barna haj, világos szem.",
             trivia: "A bűvös kocka és a golyóstoll is magyar találmány."
-        },
-        {
-            name: "Japán",
-            continent: "Ázsia",
-            flag: "🇯🇵",
-            traits: "Fegyelmezett, tisztelettudó, precíz.",
-            origin: "Szigetországi elszigeteltségben kialakult homogén kultúra.",
-            features: "Sötét, egyenes haj, mandulavágású szem.",
-            trivia: "Náluk van a legtöbb 100 év feletti ember a világon."
-        },
-        // Itt bővítheted a többi nemzetiséggel...
+        }
+        // ... többi nemzetiség
     ];
 
-    // --- OLDALKEZELÉS ---
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
-        document.getElementById(pageId).classList.add('active');
-        document.getElementById('btn-' + pageId).classList.add('active');
-    }
-
-    // --- NAPI NEMZETISÉG ---
-    const today = new Date();
-    const dayNumber = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
-    const dailyIndex = dayNumber % nationData.length;
-    const dailyNation = nationData[dailyIndex];
-    document.getElementById("nation").textContent = `${dailyNation.flag} ${dailyNation.name}`;
-
-    // --- LISTA GENERÁLÁS ---
     function filterList(continent, btn) {
-        // Gombok stílusa
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const container = document.getElementById("nation-list-container");
-        container.innerHTML = "";
-
-        const filtered = nationData.filter(n => n.continent === continent);
-
+        // ... (szűrés logika)
         filtered.forEach(n => {
             const card = document.createElement("div");
             card.className = "nation-card";
             card.innerHTML = `
                 <button class="card-header" onclick="toggleCard(this)">
-                    <span class="flag">${n.flag}</span> ${n.name}
+                    <span class="monogram">${n.monogram}</span>
+                    <img src="${n.flagPath}" alt="${n.name} zászló" class="flag-img">
+                    <span class="name">${n.name}</span>
                 </button>
                 <div class="card-body">
-                    <div class="info-grid">
-                        <div class="info-section">
-                            <h4>Külső vonások</h4> <p>${n.features}</p>
-                            <h4>Származás</h4> <p>${n.origin}</p>
-                        </div>
-                        <div class="info-section">
-                            <h4>Tulajdonságok</h4> <p>${n.traits}</p>
-                            <h4>Érdekességek</h4> <p>${n.trivia}</p>
-                        </div>
                     </div>
-                </div>
             `;
             container.appendChild(card);
         });
     }
-
-    function toggleCard(btn) {
-        const body = btn.nextElementSibling;
-        const isOpen = body.classList.contains('open');
-        document.querySelectorAll('.card-body').forEach(b => b.classList.remove('open'));
-        if (!isOpen) body.classList.add('open');
-    }
-
-    // --- KÉPVÁLTOGATÓ (Slideshow) ---
-    function setupSlideshow(containerId) {
-        const container = document.getElementById(containerId);
-        const imgs = container.getElementsByTagName('img');
-        let current = 0;
-
-        setInterval(() => {
-            imgs[current].style.opacity = 0;
-            current = (current + 1) % imgs.length;
-            imgs[current].style.opacity = 1;
-        }, 4000); // 4 másodpercenként vált
-    }
-
-    // Indítás
-    setupSlideshow('left-slideshow');
-    setupSlideshow('right-slideshow');
-    filterList('Európa', document.querySelector('.tab-btn')); // Alapértelmezett lista
-
 </script>
 </body>
 </html>

@@ -3,282 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nemzeti Edvin - Edvin mai nemzetisége</title>
+    <title>Nemzeti Edvin - A nemzetiségek tárháza</title>
     <style>
-        /* Modern Sötét Téma Alapok */
-        body {
-            background-color: #121212; /* Sötétszürke háttér */
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            transition: all 0.5s ease;
+        :root {
+            --deep-blue: #003E8A;
+            --bg-dark: #121212;
+            --text-white: #ffffff;
         }
 
-        /* Navigáció */
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGÁCIÓ --- */
         nav {
             width: 100%;
-            padding: 20px 0;
             display: flex;
             justify-content: center;
-            gap: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-            position: sticky;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            position: fixed;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .nav-btn {
             background: none;
             border: none;
             color: white;
-            font-size: 18px;
+            font-size: 1.1rem;
             cursor: pointer;
-            padding: 10px 20px;
-            transition: opacity 0.3s, transform 0.2s;
-            opacity: 0.7;
+            padding: 20px 40px;
+            transition: 0.3s all ease;
+            position: relative;
         }
 
-        .nav-btn:hover {
-            opacity: 1;
-            transform: translateY(-2px);
-        }
-
+        /* Aktív menüpont hatás: átlátszó kék háttér és aláhúzás */
         .nav-btn.active {
-            opacity: 1;
-            border-bottom: 2px solid #ffffff;
+            background-color: rgba(0, 62, 138, 0.2); /* Átlátszó kék */
+            border-bottom: 3px solid var(--deep-blue);
+            color: #4da3ff;
         }
 
-        /* Tartalom Konténer */
+        /* --- OLDALAK --- */
         .page {
             display: none;
-            width: 90%;
-            max-width: 800px;
-            padding: 40px 20px;
-            animation: fadeIn 0.5s ease forwards;
-            text-align: center;
+            padding-top: 100px;
+            min-height: 100vh;
+            animation: fadeIn 0.6s ease;
         }
 
-        .page.active {
-            display: block;
-        }
+        .page.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; filter: blur(5px); }
+            to { opacity: 1; filter: blur(0); }
         }
 
-        /* Kezdőlap Stílus */
+        /* --- KEZDŐLAP KÉPEKKEL --- */
+        .home-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 5%;
+        }
+
+        .side-images {
+            width: 200px;
+            height: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 62, 138, 0.3);
+            position: relative;
+        }
+
+        .side-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .main-content { text-align: center; max-width: 500px; }
+
         #nation {
-            font-size: 50px;
-            font-weight: bold;
-            margin-top: 30px;
-            color: #003E8A; /* Egy kis extra szín a kiemeléshez */
+            font-size: 3rem;
+            font-weight: 800;
+            color: #4da3ff;
+            text-shadow: 0 0 15px rgba(0, 62, 138, 0.5);
+            margin: 20px 0;
         }
 
-        /* Lista Oldal Stílus */
+        /* --- LISTA ÉS HARMONIKA --- */
+        .list-wrapper { max-width: 900px; margin: auto; padding: 20px; }
+
         .continent-tabs {
             display: flex;
             justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 30px;
         }
 
         .tab-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
             color: white;
-            padding: 10px 20px;
+            padding: 8px 18px;
+            border-radius: 30px;
             cursor: pointer;
-            border-radius: 20px;
             transition: 0.3s;
         }
 
-        .tab-btn:hover, .tab-btn.active {
-            background: white;
-            color: #121212;
+        .tab-btn.active {
+            background: var(--deep-blue);
+            border-color: var(--deep-blue);
         }
 
-        /* Harmonika (Accordion) stílus */
-        .nation-item {
-            text-align: left;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .nation-card {
+            background: rgba(255,255,255,0.03);
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid transparent;
+            transition: 0.3s;
         }
 
-        .nation-header {
+        .nation-card:hover { border-left-color: var(--deep-blue); background: rgba(255,255,255,0.06); }
+
+        .card-header {
             width: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
             background: none;
             border: none;
             color: white;
-            padding: 15px;
-            text-align: left;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
+            font-size: 1.2rem;
         }
 
-        .nation-content {
+        .flag { font-size: 1.5rem; margin-right: 15px; }
+
+        .card-body {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 0 15px;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0 20px;
         }
 
-        .nation-content.open {
-            max-height: 200px; /* Megfelelő magasság a leírásnak */
-            padding: 15px;
+        .card-body.open { max-height: 1000px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            text-align: left;
+            font-size: 0.95rem;
         }
 
+        .info-section h4 { color: #4da3ff; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
     <nav>
-        <button class="nav-btn active" onclick="showPage('home')">Kezdőlap</button>
-        <button class="nav-btn" onclick="showPage('list')">Nemzetiségek listája</button>
+        <button class="nav-btn active" id="btn-home" onclick="showPage('home')">Kezdőlap</button>
+        <button class="nav-btn" id="btn-list" onclick="showPage('list')">Nemzetiségek listája</button>
     </nav>
 
     <div id="home" class="page active">
-        <img src="ne_logo2.png" alt="Nemzeti Edvin" width="200"/>
-        <h1>Edvin mai nemzetisége:</h1>
-        <div id="nation">Betöltés...</div>
+        <div class="home-container">
+            <div class="side-images" id="left-slideshow">
+                <img src="https://via.placeholder.com/200x300/003E8A/fff?text=Kultúra+1" style="opacity: 1;">
+                <img src="https://via.placeholder.com/200x300/222/fff?text=Kultúra+2" style="opacity: 0;">
+            </div>
+
+            <div class="main-content">
+                <img src="ne_logo2.png" alt="Nemzeti Edvin" width="180"/>
+                <h1>Edvin mai nemzetisége:</h1>
+                <div id="nation">Betöltés...</div>
+            </div>
+
+            <div class="side-images" id="right-slideshow">
+                <img src="https://via.placeholder.com/200x300/333/fff?text=Kultúra+3" style="opacity: 1;">
+                <img src="https://via.placeholder.com/200x300/003E8A/fff?text=Kultúra+4" style="opacity: 0;">
+            </div>
+        </div>
     </div>
 
     <div id="list" class="page">
-        <h2>Válassz kontinenst</h2>
-        <div class="continent-tabs">
-            <button class="tab-btn" onclick="filterList('Európa')">Európa</button>
-            <button class="tab-btn" onclick="filterList('Ázsia')">Ázsia</button>
-            <button class="tab-btn" onclick="filterList('Amerika')">Amerika</button>
-            <button class="tab-btn" onclick="filterList('Afrika')">Afrika</button>
-            <button class="tab-btn" onclick="filterList('Óceánia')">Óceánia</button>
-        </div>
-        <div id="nation-list-container">
+        <div class="list-wrapper">
+            <div class="continent-tabs" id="tab-container">
+                <button class="tab-btn active" onclick="filterList('Európa', this)">Európa</button>
+                <button class="tab-btn" onclick="filterList('Ázsia', this)">Ázsia</button>
+                <button class="tab-btn" onclick="filterList('Amerika', this)">Amerika</button>
+                <button class="tab-btn" onclick="filterList('Afrika', this)">Afrika</button>
+                <button class="tab-btn" onclick="filterList('Óceánia', this)">Óceánia</button>
             </div>
+            <div id="nation-list-container"></div>
+        </div>
     </div>
 
 <script>
-    const nationalities = [
-        "magyar (Európa)","német (Európa)","osztrák (Európa)","svájci (Európa)",
-        "holland (Európa)","flamand (Európa)","fríz (Európa)","angol (Európa)",
-        "skót (Európa)","walesi (Európa)","ír (Európa)","manxi (Európa)","svéd (Európa)",
-        "norvég (Európa)","dán (Európa)","izlandi (Európa)","feröeri (Európa)",
-        "finn (Európa)","észt (Európa)","lett (Európa)","litván (Európa)","orosz (Európa)",
-        "ukrán (Európa)","belarusz (Európa)","lengyel (Európa)","cseh (Európa)","szlovák (Európa)",
-        "szlovén (Európa)","horvát (Európa)","szerb (Európa)","bosnyák (Európa)","montenegrói (Európa)",
-        "bolgár (Európa)","macedón (Európa)","albán (Európa)","görög (Európa)","török (Európa)",
-        "örmény (Európa)","grúz (Európa)","azeri (Európa)","kurd (Európa)","tatár (Európa)","gagauz (Európa)",
-        "ruszin (Európa)","lemkó (Európa)","boykó (Európa)","hucul (Európa)","szorb (Európa)","sziléziai (Európa)",
-        "kasub (Európa)","breton (Európa)","katalán (Európa)","baszk (Európa)","galíciai (Európa)","andalúz (Európa)",
-        "valenciai (Európa)","baleári (Európa)","korzikai (Európa)","szárd (Európa)","szicíliai (Európa)","friuli (Európa)",
-        "ladin (Európa)","román (Európa)","aromán (Európa)","lapp (Európa)","karél (Európa)","cigány (Európa)","cseh (Európa)",
-        "holland (Európa)","ausztriai (Európa)","belga (Európa)","bulgár (Európa)","francia (Európa)","luxemburgi (Európa)",
-        "máltai (Európa)","olasz (Európa)","portugál (Európa)","spanyol (Európa)","han kínai (Ázsia)","mandzsu (Ázsia)",
-        "tibeti (Ázsia)","ujgur (Ázsia)","hui (Ázsia)","zhuang (Ázsia)","miao (Ázsia)","yi (Ázsia)","mongol (Ázsia)",
-        "burját (Ázsia)","kazak (Ázsia)","kirgiz (Ázsia)","üzbég (Ázsia)","türkmén (Ázsia)","tadzsik (Ázsia)",
-        "perzsa (Ázsia)","kurd (Ázsia)","arab (Ázsia)","örmény (Ázsia)","azeri (Ázsia)","grúz (Ázsia)","csecsen (Ázsia)",
-        "ingus (Ázsia)","dagesztáni avar (Ázsia)","lezg (Ázsia)","lak (Ázsia)","kumük (Ázsia)","asszír (Ázsia)","drúz (Ázsia)",
-        "beduin (Ázsia)","jemeni arab (Ázsia)","ománi arab (Ázsia)","szaúdi arab (Ázsia)","palesztin arab (Ázsia)",
-        "izraeli zsidó (Ázsia)","szefárd zsidó (Ázsia)","askenázi zsidó (Ázsia)","mizrahi zsidó (Ázsia)","indiai hindi (Ázsia)",
-        "pandzsábi (Ázsia)","bengáli (Ázsia)","tamil (Ázsia)","telugu (Ázsia)","maráthi (Ázsia)","gudzsaráti (Ázsia)",
-        "kannada (Ázsia)","malajálam (Ázsia)","orija (Ázsia)","asszámi (Ázsia)","nepáli (Ázsia)","szingaléz (Ázsia)",
-        "bhutáni (Ázsia)","baludzs (Ázsia)","pastu (Ázsia)","szindhi (Ázsia)","radzsasztáni (Ázsia)","kásmíri (Ázsia)",
-        "ladaki (Ázsia)","rohingya (Ázsia)","shan (Ázsia)","karen (Ázsia)","hmong (Ázsia)","khmer (Ázsia)","laoszi (Ázsia)",
-        "thai (Ázsia)","vietnámi (Ázsia)","maláj (Ázsia)","jávai (Ázsia)","szundanéz (Ázsia)","balinéz (Ázsia)","madurai (Ázsia)",
-        "minangkabau (Ázsia)","batak (Ázsia)","bugis (Ázsia)","tagalog (Ázsia)","cebuano (Ázsia)","ilokano (Ázsia)","waray (Ázsia)",
-        "japán (Ázsia)","koreai (Ázsia)","jakut (Ázsia)","evenk (Ázsia)","even (Ázsia)","csukcsi (Ázsia)","koriak (Ázsia)",
-        "nanaj (Ázsia)","nivh (Ázsia)","ket (Ázsia)","jukagir (Ázsia)","burját (Ázsia)","tuvai (Ázsia)","altaji (Ázsia)",
-        "hakasz (Ázsia)","baskír (Ázsia)","tatár (Ázsia)","csuvas (Ázsia)","mordvin (Ázsia)","mari (Ázsia)","udmurt (Ázsia)",
-        "komi (Ázsia)","karéliai orosz (Ázsia)","kopt (Ázsia)","roma (Ázsia)","ujgur (Ázsia)","kazak (Ázsia)","kirgiz (Ázsia)",
-        "üzbég (Ázsia)","türkmén (Ázsia)","tadzsik (Ázsia)","pastu (Ázsia)","baludzs (Ázsia)","hazara (Ázsia)","gilaki (Ázsia)",
-        "mazandarani (Ázsia)","lur (Ázsia)","bakhtiari (Ázsia)","arab (levantei) (Ázsia)","kurmanc (Ázsia)","sorani (Ázsia)",
-        "örmény (Ázsia)","asszír (Ázsia)","joruba (Afrika)","zulu (Afrika)","xhosa (Afrika)","hausza (Afrika)","amhara (Afrika)",
-        "oromo (Afrika)","szomáli (Afrika)","berber (Afrika)","amazigh (Afrika)","észak-afrikai arab (Afrika)","tuareg (Afrika)",
-        "kabyle (Afrika)","chaoui (Afrika)","rif (Afrika)","szahrawi (Afrika)","egyiptomi (Afrika)","núbiai (Afrika)","beja (Afrika)",
-        "amhara (Afrika)","oromo (Afrika)","tigrinya (Afrika)","tigré (Afrika)","afar (Afrika)","somáli (Afrika)","afár (Afrika)",
-        "wolof (Afrika)","serer (Afrika)","fulani (Afrika)","tukulor (Afrika)","mandinka (Afrika)","bambara (Afrika)","soninke (Afrika)",
-        "songhai (Afrika)","dogon (Afrika)","mossi (Afrika)","gurma (Afrika)","hausa (Afrika)","kanuri (Afrika)","igbo (Afrika)","joruba (Afrika)",
-        "edo (Afrika)","ibibio (Afrika)","tiv (Afrika)","nupe (Afrika)","efik (Afrika)","fon (Afrika)","ewe (Afrika)","akan (Afrika)",
-        "kikuyu (Afrika)","luo (Afrika)","luhya (Afrika)","kamba (Afrika)","kalenjin (Afrika)","masai (Afrika)","meru (Afrika)","kikongo (Afrika)",
-        "luba (Afrika)","lunda (Afrika)","chokwe (Afrika)","ovimbundu (Afrika)","mbundu (Afrika)","herero (Afrika)","ovambo (Afrika)",
-        "san (busman) (Afrika)","khoikhoi (Afrika)","swazi (Afrika)","nbedele (Afrika)","shona (Afrika)","tswana (Afrika)","sotho (Afrika)",
-        "zulu (Afrika)","xhosa (Afrika)","venda (Afrika)","tsonga (Afrika)","chewa (Afrika)","yao (Afrika)","tumbuka (Afrika)","makua (Afrika)",
-        "lomwe (Afrika)","sena (Afrika)","ngoni (Afrika)","makonde (Afrika)","sukuma (Afrika)","nyamwezi (Afrika)","ha (Afrika)",
-        "wahaya (Afrika)","ganda (Afrika)","ankole (Afrika)","teso (Afrika)","karimojong (Afrika)","acholi (Afrika)","alur (Afrika)",
-        "lugbara (Afrika)","bari (Afrika)","dinka (Afrika)","nuer (Afrika)","shilluk (Afrika)","inuit (Amerika)","yupik (Amerika)",
-        "aleut (Amerika)","kalaallit (Amerika)","cree (Amerika)","ojibwe (Amerika)","odawa (Amerika)","mi'kmaq (Amerika)","haudenosaunee (Amerika)",
-        "mohawk (Amerika)","cherokee (Amerika)","choctaw (Amerika)","chickasaw (Amerika)","creek (Amerika)","seminole (Amerika)","navajo (Amerika)",
-        "apache (Amerika)","hopi (Amerika)","zuni (Amerika)","pueblo (Amerika)","sioux (Amerika)","cheyenne (Amerika)","arapaho (Amerika)",
-        "blackfoot (Amerika)","comanche (Amerika)","shoshone (Amerika)","ute (Amerika)","pawnee (Amerika)","irokéz (Amerika)","nahua (Amerika)",
-        "azték (Amerika)","zapotec (Amerika)","mixtec (Amerika)","otomí (Amerika)","totonak (Amerika)","tarasco (Amerika)","maya (Amerika)",
-        "yukatek (Amerika)","quiché (Amerika)","kaqchikel (Amerika)","mam (Amerika)","q'eqchi' (Amerika)","chol (Amerika)","tzotzil (Amerika)",
-        "tzeltal (Amerika)","garífuna (Amerika)","miskito (Amerika)","kuna (Amerika)","emberá (Amerika)","wounaan (Amerika)","guaraní (Amerika)",
-        "quechua (Amerika)","aymara (Amerika)","mapuche (Amerika)","diaguita (Amerika)","atacemeno (Amerika)","tehuelche (Amerika)",
-        "selk'nam (Amerika)","yamana (Amerika)","maori (Óceánia)","samoai (Óceánia)","tongai (Óceánia)","iTaukei (Óceánia)","hawaii (Óceánia)",
-        "tahitii (Óceánia)","marquesasi (Óceánia)","tokelaui (Óceánia)","chamorro (Óceánia)","karolin (Óceánia)","palaui (Óceánia)",
-        "tuvalaui (Óceánia)","melanéz (Óceánia)","asaro (Óceánia)","ausztrál (Óceánia)"
+    // --- ADATBÁZIS OBJEKTUMOKKAL ---
+    const nationData = [
+        {
+            name: "Magyar",
+            continent: "Európa",
+            flag: "🇭🇺",
+            traits: "Karakán, vendégszerető, büszke.",
+            origin: "Uráli eredet, Kárpát-medencei letelepedés.",
+            features: "Változatos, gyakran barna haj, világos szem.",
+            trivia: "A bűvös kocka és a golyóstoll is magyar találmány."
+        },
+        {
+            name: "Japán",
+            continent: "Ázsia",
+            flag: "🇯🇵",
+            traits: "Fegyelmezett, tisztelettudó, precíz.",
+            origin: "Szigetországi elszigeteltségben kialakult homogén kultúra.",
+            features: "Sötét, egyenes haj, mandulavágású szem.",
+            trivia: "Náluk van a legtöbb 100 év feletti ember a világon."
+        },
+        // Itt bővítheted a többi nemzetiséggel...
     ];
 
-    // --- OLDALVÁLTÁS LOGIKA ---
+    // --- OLDALKEZELÉS ---
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         
         document.getElementById(pageId).classList.add('active');
-        event.target.classList.add('active');
+        document.getElementById('btn-' + pageId).classList.add('active');
     }
 
-    // --- MAI NEMZETISÉG GENERÁLÁSA ---
+    // --- NAPI NEMZETISÉG ---
     const today = new Date();
     const dayNumber = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
-    const dailyIndex = dayNumber % nationalities.length;
-    document.getElementById("nation").textContent = nationalities[dailyIndex];
+    const dailyIndex = dayNumber % nationData.length;
+    const dailyNation = nationData[dailyIndex];
+    document.getElementById("nation").textContent = `${dailyNation.flag} ${dailyNation.name}`;
 
-    // --- LISTA SZŰRÉS ÉS MEGJELENÍTÉS ---
-    function filterList(continent) {
+    // --- LISTA GENERÁLÁS ---
+    function filterList(continent, btn) {
+        // Gombok stílusa
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
         const container = document.getElementById("nation-list-container");
-        container.innerHTML = ""; // Alaphelyzet
+        container.innerHTML = "";
 
-        const filtered = nationalities.filter(n => n.includes(`(${continent})`));
+        const filtered = nationData.filter(n => n.continent === continent);
 
-        filtered.forEach(item => {
-            const name = item.split(" (")[0];
-            const div = document.createElement("div");
-            div.className = "nation-item";
-            div.innerHTML = `
-                <button class="nation-header" onclick="toggleAccordion(this)">
-                    ${name} <span>+</span>
+        filtered.forEach(n => {
+            const card = document.createElement("div");
+            card.className = "nation-card";
+            card.innerHTML = `
+                <button class="card-header" onclick="toggleCard(this)">
+                    <span class="flag">${n.flag}</span> ${n.name}
                 </button>
-                <div class="nation-content">
-                    Ez a nemzetiség ${continent} területén él. Itt helyezheted el a részletes leírást Edvin jellemzőiről, amikor épp ezt a nemzetiséget ölti magára.
+                <div class="card-body">
+                    <div class="info-grid">
+                        <div class="info-section">
+                            <h4>Külső vonások</h4> <p>${n.features}</p>
+                            <h4>Származás</h4> <p>${n.origin}</p>
+                        </div>
+                        <div class="info-section">
+                            <h4>Tulajdonságok</h4> <p>${n.traits}</p>
+                            <h4>Érdekességek</h4> <p>${n.trivia}</p>
+                        </div>
+                    </div>
                 </div>
             `;
-            container.appendChild(div);
+            container.appendChild(card);
         });
     }
 
-    // --- HARMONIKA NYITÁS/ZÁRÁS ---
-    function toggleAccordion(element) {
-        const content = element.nextElementSibling;
-        const isOpen = content.classList.contains('open');
-        
-        // Összes többi bezárása (opcionális, ha csak egyet akarsz nyitva hagyni)
-        document.querySelectorAll('.nation-content').forEach(c => c.classList.remove('open'));
-        
-        if (!isOpen) {
-            content.classList.add('open');
-        }
+    function toggleCard(btn) {
+        const body = btn.nextElementSibling;
+        const isOpen = body.classList.contains('open');
+        document.querySelectorAll('.card-body').forEach(b => b.classList.remove('open'));
+        if (!isOpen) body.classList.add('open');
     }
-</script>
 
+    // --- KÉPVÁLTOGATÓ (Slideshow) ---
+    function setupSlideshow(containerId) {
+        const container = document.getElementById(containerId);
+        const imgs = container.getElementsByTagName('img');
+        let current = 0;
+
+        setInterval(() => {
+            imgs[current].style.opacity = 0;
+            current = (current + 1) % imgs.length;
+            imgs[current].style.opacity = 1;
+        }, 4000); // 4 másodpercenként vált
+    }
+
+    // Indítás
+    setupSlideshow('left-slideshow');
+    setupSlideshow('right-slideshow');
+    filterList('Európa', document.querySelector('.tab-btn')); // Alapértelmezett lista
+
+</script>
 </body>
 </html>

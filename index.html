@@ -65,34 +65,57 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- KEZDŐLAP --- */
-        .home-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 50px;
-            padding: 0 5%;
-            text-align: center;
-        }
+    /* --- JAVÍTOTT KEZDŐLAP ELRENDEZÉS --- */
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Kisebb távolság, hogy elférjenek */
+    padding: 0 5%;
+    text-align: center;
+}
 
-        .side-images {
-            width: 200px;
-            height: 300px;
-            border-radius: 15px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0, 62, 138, 0.2);
-        }
+.side-images {
+    flex: 1; /* Dinamikusan kitölti a helyet */
+    max-width: 200px; /* De ne legyen szélesebb 200px-nél */
+    aspect-ratio: 2 / 3; /* Fix arány: mindig 2:3 lesz, nem nyúlik el! */
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 62, 138, 0.2);
+}
 
-        .side-images img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            left: 0;
-            top: 0;
-            transition: opacity 1s ease-in-out;
-        }
+.side-images img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Levágja a széleket, de nem torzít */
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+/* --- MOBIL NÉZET (Telefonokra optimalizálva) --- */
+@media (max-width: 768px) {
+    .home-container {
+        flex-direction: column; /* Egymás alá kerülnek az elemek */
+        gap: 30px;
+    }
+
+    .side-images {
+        width: 150px; /* Telefonon kicsit kisebbek legyenek */
+        max-width: 80% ;
+        /* Itt a trükk: telefonon a logó alá/fölé kerülnek */
+    }
+
+    .main-content {
+        order: -1; /* A logó és a felirat kerüljön legfelülre */
+    }
+
+    #nation {
+        font-size: 2rem; /* Telefonon kisebb betű, hogy ne törjön szét */
+    }
+}
 
         #nation {
             font-size: 3rem;

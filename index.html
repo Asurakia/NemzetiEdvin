@@ -292,19 +292,19 @@
 
 <script>
     // --- ADATBÁZIS ---
-   const nationData = [
-    {
-        name: "Magyar",
-        continent: "Európa",
-        monogram: "HU",
-        flagPath: "images/flags/hu.png",
-        traits: "Karakán, vendégszerető, büszke.",
-        origin: "Uráli eredet, Kárpát-medencei letelepedés.",
-        features: "Változatos, gyakran barna haj, világos szem.",
-        trivia: "A bűvös kocka és a golyóstoll is magyar találmány.",
-        legend: "A monda szerint Hunor és Magor egy csodálatos szarvast űzve jutottak el a Meótisz ingoványaiba, ahol letelepedtek és megalapították a hun és magyar népet." // ÚJ MEZŐ
-    },
-       {
+    const nationData = [
+        {
+            name: "Magyar",
+            continent: "Európa",
+            monogram: "HU",
+            flagPath: "images/flags/hu.png",
+            traits: "Karakán, vendégszerető, büszke.",
+            origin: "Uráli eredet, Kárpát-medencei letelepedés.",
+            features: "Változatos, gyakran barna haj, világos szem.",
+            trivia: "A bűvös kocka és a golyóstoll is magyar találmány.",
+            legend: "A monda szerint Hunor és Magor egy csodálatos szarvast űzve jutottak el a Meótisz ingoványaiba, ahol letelepedtek és megalapították a hun és magyar népet."
+        },
+        {
             name: "Japán",
             continent: "Ázsia",
             monogram: "JP",
@@ -313,69 +313,75 @@
             origin: "Szigetországi homogén kultúra.",
             features: "Sötét, egyenes haj, mandulavágású szem.",
             trivia: "Náluk van a legtöbb 100 év feletti ember.",
-           legend: "",
+            legend: "" // Itt vessző (,) vagy semmi nem kell, de pontosvessző TILOS!
         }
-        // Ide jöhet a többi...
     ];
 
     // --- OLDALVÁLTÁS ---
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
         document.getElementById(pageId).classList.add('active');
         document.getElementById('btn-' + pageId).classList.add('active');
     }
 
     // --- MAI NEMZETISÉG ---
-    const today = new Date();
-    const dayNumber = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
-    const dailyIndex = dayNumber % nationData.length;
-    document.getElementById("nation").textContent = nationData[dailyIndex].name;
+    function setDaily() {
+        const today = new Date();
+        const dayNumber = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
+        const dailyIndex = dayNumber % nationData.length;
+        document.getElementById("nation").textContent = nationData[dailyIndex].name;
+    }
 
     // --- LISTA GENERÁLÁS ---
     function filterList(continent, btn) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        if(btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
 
         const container = document.getElementById("nation-list-container");
         container.innerHTML = "";
 
         const filtered = nationData.filter(n => n.continent === continent);
 
-    filtered.forEach(n => {
-    const card = document.createElement("div");
-    card.className = "nation-card";
-    card.innerHTML = `
-        <button class="card-header" onclick="toggleCard(this)">
-            <span class="monogram">${n.monogram}</span>
-            <img src="${n.flagPath}" alt="zászló" class="flag-img" onerror="this.style.display='none'">
-            <span>${n.name}</span>
-        </button>
-        <div class="card-body">
-            <div class="info-grid">
-                <div class="info-section">
-                    <h4>Külső vonások</h4> <p>${n.features}</p>
-                    <h4>Származás</h4> <p>${n.origin}</p>
-                </div>
-                <div class="info-section">
-                    <h4>Tulajdonságok</h4> <p>${n.traits}</p>
-                    <h4>Érdekességek</h4> <p>${n.trivia}</p>
-                </div>
-            </div>
+        filtered.forEach(n => {
+            const card = document.createElement("div");
+            card.className = "nation-card";
             
-            <div class="legend-container">
-                <button class="legend-btn" onclick="toggleLegend(this)">
-                    ✨ Eredettörténet / Legenda megnyitása
+            // Csak akkor rakunk legenda gombot, ha van szöveg hozzá
+            const legendHTML = n.legend ? `
+                <div class="legend-container">
+                    <button class="legend-btn" onclick="toggleLegend(this)">
+                        ✨ Eredettörténet / Legenda megnyitása
+                    </button>
+                    <div class="legend-content">
+                        <p>${n.legend}</p>
+                    </div>
+                </div>` : "";
+
+            card.innerHTML = `
+                <button class="card-header" onclick="toggleCard(this)">
+                    <span class="monogram">${n.monogram}</span>
+                    <img src="${n.flagPath}" alt="zászló" class="flag-img" onerror="this.style.display='none'">
+                    <span>${n.name}</span>
                 </button>
-                <div class="legend-content">
-                    <p>${n.legend}</p>
+                <div class="card-body">
+                    <div class="info-grid">
+                        <div class="info-section">
+                            <h4>Külső vonások</h4> <p>${n.features}</p>
+                            <h4>Származás</h4> <p>${n.origin}</p>
+                        </div>
+                        <div class="info-section">
+                            <h4>Tulajdonságok</h4> <p>${n.traits}</p>
+                            <h4>Érdekességek</h4> <p>${n.trivia}</p>
+                        </div>
+                    </div>
+                    ${legendHTML}
                 </div>
-            </div>
-        </div>
-    `;
-    container.appendChild(card);
-});
+            `;
+            container.appendChild(card);
+        });
     }
 
     // --- KÁRTYA NYITÁS ---
@@ -387,23 +393,21 @@
     }
 
     function toggleLegend(btn) {
-    const content = btn.nextElementSibling;
-    content.classList.toggle('open');
-    
-    // Szöveg módosítása állapottól függően
-    if (content.classList.contains('open')) {
-        btn.textContent = "✨ Legenda bezárása";
-    } else {
-        btn.textContent = "✨ Eredettörténet / Legenda megnyitása";
+        const content = btn.nextElementSibling;
+        content.classList.toggle('open');
+        btn.textContent = content.classList.contains('open') ? "✨ Legenda bezárása" : "✨ Eredettörténet / Legenda megnyitása";
     }
-}
-    function setupSlidesh
 
-    // --- SLIDESHOW ---ow(containerId) {
+    // --- SLIDESHOW ---
+    function setupSlideshow(containerId) {
         const container = document.getElementById(containerId);
+        if(!container) return;
         const imgs = container.getElementsByTagName('img');
         let current = 0;
         if(imgs.length < 2) return;
+
+        // Csak az első legyen látható az elején
+        for(let i=1; i<imgs.length; i++) imgs[i].style.opacity = 0;
 
         setInterval(() => {
             imgs[current].style.opacity = 0;
@@ -414,6 +418,7 @@
 
     // Indítás
     window.onload = () => {
+        setDaily();
         setupSlideshow('left-slideshow');
         setupSlideshow('right-slideshow');
         filterList('Európa', document.querySelector('.tab-btn'));
